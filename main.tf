@@ -1,16 +1,16 @@
 #ami
 data "aws_ami" "name" {
   most_recent = true
-  owners = [ "amazon" ]
+  owners      = ["amazon"]
 }
 output "ami-name" {
   value = data.aws_ami.name.id
 }
 #security groups
 data "aws_security_group" "name" {
-    tags = {
-        Name  = "nginx-sg"
-    }
+  tags = {
+    Name = "nginx-sg"
+  }
 }
 output "sg" {
   value = data.aws_security_group.name.id
@@ -27,13 +27,13 @@ output "vpc-ou" {
 
 #availability zones
 data "aws_availability_zones" "name" {
-  state =  "available"
+  state = "available"
 }
 output "zones" {
   value = data.aws_availability_zones.name
 }
 #To get the account details
-data "aws_caller_identity" "name" { 
+data "aws_caller_identity" "name" {
 }
 data "aws_region" "name" {
 }
@@ -49,20 +49,20 @@ output "caller_info_user" {
 #subnet ID
 data "aws_subnet" "name" {
   filter {
-    name = "vpc-id"
+    name   = "vpc-id"
     values = [data.aws_vpc.name.id]
 
   }
   tags = {
-    Name =  "public-subnet"
+    Name = "public-subnet"
   }
 }
 #create an Instance
 
 resource "aws_instance" "myserver" {
-  ami = "ami-08718895af4dfa033"
-  instance_type = "t2.micro"
-  subnet_id = data.aws_subnet.name.id
+  ami             = "ami-08718895af4dfa033"
+  instance_type   = "t2.micro"
+  subnet_id       = data.aws_subnet.name.id
   security_groups = [data.aws_security_group.name.id]
   tags = {
     Name = "Server"
